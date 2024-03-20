@@ -1,8 +1,13 @@
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
-text = "fish was eaten"
+text = "I ate fish"
 parsed_text = nlp(text)
 
-for token in parsed_text:
-    print(token.text,token.dep_)
+def is_sentence_passive(sentence):
+    for token in sentence:
+        if token.dep_ == "nsubjpass":
+            return True
+    return False
+
+print(is_sentence_passive(parsed_text))
