@@ -12,4 +12,22 @@ def is_sentence_passive(sentence):
             return True
     return False
 
-import_text("sample1")
+
+def mark_improveable_sentences(document):
+    passive = list()
+    long = list()
+    very_long = list()
+    contains_adverbs = list()
+
+    for sent in document.sents:
+        if len(sent) > 20:
+            very_long.append(sent.text)
+        elif len(sent) > 14:
+            long.append(sent.text)
+        #passive
+        #adverbs
+        pass
+
+
+text = import_text("sample1")
+doc = nlp(text)
