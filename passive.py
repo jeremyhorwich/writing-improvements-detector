@@ -1,14 +1,10 @@
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
-text = "I ate fish in the afternoon with my mother"
-parsed_text = nlp(text)
-
-print(len(parsed_text))
-
 def import_text(filename):
     file = open("texts/" + filename, "r")
-    print(file)
+    return file.read()
+
 
 def is_sentence_passive(sentence):
     for token in sentence:
@@ -16,4 +12,4 @@ def is_sentence_passive(sentence):
             return True
     return False
 
-print(is_sentence_passive(parsed_text))
+import_text("sample1")
