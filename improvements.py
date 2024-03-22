@@ -4,29 +4,33 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 
 def import_text(filename):
-    file = open("texts/" + filename, "r")
+    file = open("texts/" + filename + ".txt", "r")
     return file.read()
 
 
 def mark_improveable_sentences(document):
+    TOO_LONG = 20
+    VERY_TOO_LONG = 27
+
     long = set()
     very_long = set()
     passive = set()
     adverbs = defaultdict(list)
     for sent in document.sents:
-        if len(sent) > 20:
-            very_long.add(sent.text)
-        elif len(sent) > 14:
-            long.add(sent.text)
+        if len(sent) > VERY_TOO_LONG:
+            very_long.add(sent)
+        elif len(sent) > TOO_LONG:
+            long.add(sent)
         for token in sent:
-            if passive[-1] != sent and token.dep_ == "nsubjpass":
+            if token.dep_ == "nsubjpass":
                 passive.add(sent)
             if token.pos_ == "ADV":
                 adverbs[sent].append(token)
-    return long, very_long, passive, adverbs
+    return (long, very_long, passive, adverbs)
 
 
-def display_improvable_sentences(document,long,very_long,passive,adverbs):
+def display_improvable_sentences(document, problems):
+    long,very_long,passive,adverbs = problems
     print("Sentences with problems found: ")
     for sent in document.sents:
         sentence_printed = False
@@ -51,6 +55,8 @@ def display_improvable_sentences(document,long,very_long,passive,adverbs):
             print()
 
 
-
-text = import_text("sample1")
-doc = nlp(text)
+if __name__ == "__main__":
+    text = import_text("sample1")
+    doc = nlp(text)
+    problems = mark_improveable_sentences(doc)
+    display_improvable_sentences(doc,problems)
