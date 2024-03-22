@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
@@ -14,19 +16,21 @@ def is_sentence_passive(sentence):
 
 
 def mark_improveable_sentences(document):
-    passive = list()
     long = list()
     very_long = list()
-    contains_adverbs = list()
-
+    passive = list()
+    adverbs = defaultdict(list)
     for sent in document.sents:
         if len(sent) > 20:
             very_long.append(sent.text)
         elif len(sent) > 14:
             long.append(sent.text)
-        #passive
-        #adverbs
-        pass
+        for token in sent:
+            if passive[-1] != sent and token.dep_ == "nsubjpass":
+                passive.append(sent)
+            if token.pos_ == "ADV":
+                adverbs[sent].append(token)
+    return long, very_long, passive, adverbs
 
 
 text = import_text("sample1")
